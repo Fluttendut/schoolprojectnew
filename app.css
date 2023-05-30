@@ -129,6 +129,17 @@ button {
     width: 100%;
     max-width: 380px;
 }
+tr button:hover{
+    background-color: var(--light-green);
+}
+/*max-width makes sure the dialog will never be larger than 550px*/
+dialog{
+    max-width: 550px;
+    width: 90vw;
+}
+tr button{
+    width: 49%;
+}
 
 input {
     margin: 1em auto;

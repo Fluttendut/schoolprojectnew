@@ -21,6 +21,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -34,6 +35,16 @@
             <button>Create</button>
         </form>
 
+        <dialog id="dialog-update-teacher">
+            <form id="form-update-teacher">
+                <h2>Update</h2>
+                <label for="update-teacher-name">Name</label>
+                <input type="text" name="name" id="update-teacher-name" placeholder="Update teacher name" required>
+                <label for="update-teacher-email">Email</label>
+                <input type="email" name="email" id="update-teacher-email" placeholder="Update teacher email" required>
+                <button>Update</button>
+            </form>
+        </dialog>
     </section>
 
     <script src="app.js"></script>

@@ -2,6 +2,7 @@
 
 const endpoint = "https://race-school-system-default-rtdb.firebaseio.com/";
 let teachers = [];
+let selectedTeacherId;
 
 window.addEventListener("load", initApp);
 
@@ -10,7 +11,9 @@ async function initApp() {
     await updateTeacherTable();
 
     //events
+    //The events that only needs to be done once should be put under initApp
     document.querySelector("#form-create-teacher").addEventListener("submit", createTeacherSubmit);
+    document.querySelector("#form-update-teacher").addEventListener("submit", updateTeacherSubmit);
 }
 
 async function updateTeacherTable() {
@@ -52,9 +55,74 @@ function showTeachers(listOfTeachers) {
         <tr>
             <td>${teacher.name}</td>
             <td>${teacher.email}</td>
+            <td>
+                <button class="btn-delete">Delete</button>
+                <button class="btn-update">Update</button>
+            </td>
+           
         </tr>
+        
     `;
         document.querySelector("#teachers-table tbody").insertAdjacentHTML("beforeend", html);
+        document
+            //the function is inside the event listener to be able to reach the const teacher
+            .querySelector("#teachers-table tbody tr:last-child .btn-delete")
+            .addEventListener("click", function (){
+            console.log(teacher);
+                deleteTeacher(teacher.id);
+        })
+        document
+
+            .querySelector("#teachers-table tbody tr:last-child .btn-update")
+            .addEventListener("click", function (){
+                showUpdateDialog(teacher);
+            })
+    }
+}
+
+async function showUpdateDialog(teacher){
+    console.log(teacher);
+    selectedTeacherId = teacher.id;
+    const form = document.querySelector("#form-update-teacher");
+    //We select form and put the value of teacher name on the name input.
+    form.name.value =teacher.name;
+    form.email.value =teacher.email;
+    document.querySelector("#dialog-update-teacher").showModal();
+}
+
+function updateTeacherSubmit(event){
+    //preventDefault
+    event.preventDefault();
+    const form = event.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    console.log(name, email)
+    updateTeacher(selectedTeacherId, name, email)
+    document.querySelector("#dialog-update-teacher").close();
+}
+
+async function updateTeacher(id, name, email){
+    const teacher = {name, email};
+    const json = JSON.stringify(teacher)
+    const response = await fetch(`${endpoint}teachers/${id}.json`,
+        {method: "PUT",
+            body:json
+        });
+
+    if(response.ok){
+        updateTeacherTable();
+    }
+}
+
+async function deleteTeacher(id){
+    console.log(id);
+    //`${} backtick strings lets javascript know that something incoming is dynamic.
+    //Remember the method
+    const response = await fetch(`${endpoint}teachers/${id}.json`, {method: "DELETE"});
+
+    //test om response gik godt
+    if(response.ok){
+        updateTeacherTable();
     }
 }
 
